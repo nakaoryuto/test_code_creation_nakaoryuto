@@ -42,21 +42,16 @@ public class Case02 {
 		goTo("http://localhost:8080/lms");
 
 		// ログインボタンが表示されるまで待機
-		By loginButton = By.xpath("//button[normalize-space()='ログイン'] | //input[@type='submit' and @value='ログイン']");
-		visibilityTimeout(loginButton, 5);
+		visibilityTimeout(By.cssSelector("button[type='submit']"), 5);
 
-		// タイトル（ブラウザのタイトル）確認後ログイン
+		// タイトル確認
 		assertEquals("ログイン", webDriver.getTitle());
 
-		// ログインボタン文字確認後ログイン
-		WebElement btn = webDriver.findElement(loginButton);
-		String btnText = btn.getText();
-		if (btnText == null || btnText.isBlank()) {
-			btnText = btn.getAttribute("value");
-		}
-		assertEquals("ログイン", btnText.trim());
+		// ログインボタン確認
+		WebElement btn = webDriver.findElement(By.cssSelector("button[type='submit']"));
+		assertEquals("ログイン", btn.getText().trim());
 
-		// スクリーンショットをEvidenceファイルに保存
+		// スクリーンショットをevidenceフォルダに保存
 		getEvidence(new Object() {
 		}, "loginView");
 	}
@@ -66,29 +61,29 @@ public class Case02 {
 	@DisplayName("テスト02 DBに登録されていないユーザーでログイン")
 	void test02() {
 		// TODO ここに追加
-		goTo("http://localhost:8080/lms");
+		// 待機ログインID入力欄が表示されるまで待機
+		visibilityTimeout(By.name("loginId"), 5);
 
-		// 入力欄（画面設計書のパラメータ名に従い name を使用）
-		By loginId = By.name("loginId");
-		By password = By.name("password");
-		visibilityTimeout(loginId, 5);
+		webDriver.findElement(By.name("loginId")).clear();
+		webDriver.findElement(By.name("loginId")).sendKeys("StudentZZ99");
 
-		webDriver.findElement(loginId).clear();
-		webDriver.findElement(loginId).sendKeys("StudentZZ99");
+		webDriver.findElement(By.name("password")).clear();
+		webDriver.findElement(By.name("password")).sendKeys("StudentZZ99");
 
-		webDriver.findElement(password).clear();
-		webDriver.findElement(password).sendKeys("StudentZZ99");
+		// スクリーンショットをevidenceフォルダに保存（入力後、ログイン押下前）
+		getEvidence(new Object() {
+		}, "beforeLogin");
 
-		// ログインボタン押下
-		By loginButton = By.xpath("//button[normalize-space()='ログイン'] | //input[@type='submit' and @value='ログイン']");
-		webDriver.findElement(loginButton).click();
+		// ログイン押下
+		webDriver.findElement(By.cssSelector("button[type='submit']")).click();
+
+		// エラーメッセージが表示されるまで待機
+		visibilityTimeout(By.xpath("//*[contains(normalize-space(),'ログインに失敗しました')]"), 5);
 
 		// エラーメッセージ表示確認
-		By errorMsg = By.xpath("//*[contains(normalize-space(),'ログインに失敗しました')]");
-		visibilityTimeout(errorMsg, 5);
-		assertTrue(webDriver.findElement(errorMsg).isDisplayed());
+		assertTrue(webDriver.findElement(By.xpath("//*[contains(normalize-space(),'ログインに失敗しました')]")).isDisplayed());
 
-		// スクリーンショットをEvidenceファイルに保存
+		// スクリーンショットをevidenceフォルダに保存（エラー表示後）
 		getEvidence(new Object() {
 		}, "authFail");
 	}
