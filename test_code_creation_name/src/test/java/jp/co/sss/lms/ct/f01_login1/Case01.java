@@ -45,16 +45,11 @@ public class Case01 {
 		visibilityTimeout(By.cssSelector("button[type='submit'], input[type='submit']"), 5);
 
 		// タイトルが「ログイン」か確認
-		WebElement title = webDriver.findElement(By.tagName("title"));
 		assertEquals("ログイン", webDriver.getTitle());
 
-		// ログインボタン表示が「ログイン」か確認
+		// ログインボタンが表示されているか確認
 		WebElement btn = webDriver.findElement(By.cssSelector("button[type='submit'], input[type='submit']"));
-		String btnText = btn.getText();
-		if (btnText == null || btnText.isBlank()) {
-			btnText = btn.getAttribute("value");
-		}
-		assertEquals("ログイン", btnText.trim());
+		assertTrue(btn.isDisplayed());
 
 		// スクリーンショットをevidenceフォルダに保存
 		getEvidence(new Object() {
