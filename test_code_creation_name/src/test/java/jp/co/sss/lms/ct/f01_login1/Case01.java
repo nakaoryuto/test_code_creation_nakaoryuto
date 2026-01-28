@@ -38,21 +38,20 @@ public class Case01 {
 	@Order(1)
 	@DisplayName("テスト01 トップページURLでアクセス")
 	void test01() {
-		// TODO ここに追加
 		goTo("http://localhost:8080/lms");
 
-		// ログインボタン（submit）が見えるまで待機
-		visibilityTimeout(By.cssSelector("button[type='submit'], input[type='submit']"), 5);
+		// ログインボタンが表示されるまで待機
+		visibilityTimeout(By.xpath("//input[@type='submit']"), 5);
 
-		// タイトルが「ログイン」か確認
-		assertEquals("ログイン", webDriver.getTitle());
+		// タイトル確認
+		assertEquals("ログイン | LMS", webDriver.getTitle());
 
-		// ログインボタンが表示されているか確認
-		WebElement btn = webDriver.findElement(By.cssSelector("button[type='submit'], input[type='submit']"));
-		assertTrue(btn.isDisplayed());
+		// ログインボタン確認
+		WebElement btn = webDriver.findElement(By.xpath("//input[@type='submit']"));
+		assertEquals("ログイン", btn.getAttribute("value"));
 
 		// スクリーンショットをevidenceフォルダに保存
 		getEvidence(new Object() {
-		});
+		}, "loginView");
 	}
 }
