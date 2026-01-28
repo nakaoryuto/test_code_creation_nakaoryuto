@@ -38,18 +38,17 @@ public class Case02 {
 	@Order(1)
 	@DisplayName("テスト01 トップページURLでアクセス")
 	void test01() {
-		// TODO ここに追加
 		goTo("http://localhost:8080/lms");
 
 		// ログインボタンが表示されるまで待機
-		visibilityTimeout(By.cssSelector("button[type='submit']"), 5);
+		visibilityTimeout(By.xpath("//input[@type='submit']"), 5);
 
 		// タイトル確認
-		assertEquals("ログイン", webDriver.getTitle());
+		assertEquals("ログイン | LMS", webDriver.getTitle());
 
 		// ログインボタン確認
-		WebElement btn = webDriver.findElement(By.cssSelector("button[type='submit']"));
-		assertEquals("ログイン", btn.getText().trim());
+		WebElement btn = webDriver.findElement(By.xpath("//input[@type='submit']"));
+		assertEquals("ログイン", btn.getAttribute("value"));
 
 		// スクリーンショットをevidenceフォルダに保存
 		getEvidence(new Object() {
@@ -60,7 +59,6 @@ public class Case02 {
 	@Order(2)
 	@DisplayName("テスト02 DBに登録されていないユーザーでログイン")
 	void test02() {
-		// TODO ここに追加
 		// 待機ログインID入力欄が表示されるまで待機
 		visibilityTimeout(By.name("loginId"), 5);
 
@@ -75,7 +73,7 @@ public class Case02 {
 		}, "beforeLogin");
 
 		// ログイン押下
-		webDriver.findElement(By.cssSelector("button[type='submit']")).click();
+		webDriver.findElement(By.xpath("//input[@type='submit']")).click();
 
 		// エラーメッセージが表示されるまで待機
 		visibilityTimeout(By.xpath("//*[contains(normalize-space(),'ログインに失敗しました')]"), 5);
