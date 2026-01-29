@@ -59,8 +59,6 @@ public class Case02 {
 	@Order(2)
 	@DisplayName("テスト02 DBに登録されていないユーザーでログイン")
 	void test02() {
-		// 待機ログインID入力欄が表示されるまで待機
-		visibilityTimeout(By.name("loginId"), 5);
 
 		webDriver.findElement(By.name("loginId")).clear();
 		webDriver.findElement(By.name("loginId")).sendKeys("StudentZZ99");
