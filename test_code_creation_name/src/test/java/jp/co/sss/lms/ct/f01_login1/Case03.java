@@ -64,8 +64,6 @@ public class Case03 {
 	@Order(2)
 	@DisplayName("テスト02 初回ログイン済みの受講生ユーザーでログイン")
 	void test02() {
-		// ログインID入力欄が表示されるまで待機
-		visibilityTimeout(By.name("loginId"), 5);
 
 		webDriver.findElement(By.name("loginId")).clear();
 		webDriver.findElement(By.name("loginId")).sendKeys("StudentAA01");
