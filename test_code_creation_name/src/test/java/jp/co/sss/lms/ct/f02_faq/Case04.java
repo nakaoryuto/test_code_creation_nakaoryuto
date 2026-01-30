@@ -121,12 +121,6 @@ public class Case04 {
 		// 画面操作の待機用
 		WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
 
-		// 現在のタブを保持
-		String base = webDriver.getWindowHandle();
-
-		// クリック前のタブ数を保持
-		int before = webDriver.getWindowHandles().size();
-
 		// 「よくある質問」が見えるまで待機
 		visibilityTimeout(By.linkText("よくある質問"), 10);
 
@@ -134,11 +128,10 @@ public class Case04 {
 		webDriver.findElement(By.linkText("よくある質問")).click();
 
 		// 別タブが開くまで待機
-		wait.until(ExpectedConditions.numberOfWindowsToBe(before + 1));
+		wait.until(ExpectedConditions.numberOfWindowsToBe(2));
 
 		// 新しく開いたタブへ切り替え
-		String child = webDriver.getWindowHandles().stream()
-				.filter(h -> !h.equals(base)).findFirst().get();
+		String child = webDriver.getWindowHandles().stream().reduce((a, b) -> b).get();
 		webDriver.switchTo().window(child);
 
 		// よくある質問画面へ遷移したことをタイトルで確認
