@@ -147,11 +147,5 @@ public class Case04 {
 		// スクリーンショットをevidenceフォルダに保存
 		getEvidence(new Object() {
 		}, "faq");
-
-		// 新規タブを閉じる
-		webDriver.close();
-
-		// 元タブへ戻る
-		webDriver.switchTo().window(base);
 	}
 }
