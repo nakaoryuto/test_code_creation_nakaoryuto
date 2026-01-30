@@ -97,17 +97,17 @@ public class Case04 {
 		scrollTo("0");
 
 		// 「機能」メニューを押してプルダウンを開く
-		webDriver.findElement(
-				By.xpath("//a[contains(normalize-space(.),'機能') or .//*[contains(normalize-space(.),'機能')]]")).click();
+		webDriver.findElement(By.linkText("機能")).click();
 
 		// プルダウン内の「ヘルプ」が見えるまで待機
-		visibilityTimeout(
-				By.xpath("//a[contains(normalize-space(.),'ヘルプ') or .//*[contains(normalize-space(.),'ヘルプ')]]"), 10);
+		visibilityTimeout(By.linkText("ヘルプ"), 10);
 
 		// 「ヘルプ」をクリック
-		webDriver.findElement(
-				By.xpath("//a[contains(normalize-space(.),'ヘルプ') or .//*[contains(normalize-space(.),'ヘルプ')]]"))
-				.click();
+		webDriver.findElement(By.linkText("ヘルプ")).click();
+
+		// ヘルプ画面へ遷移したことを待機
+		WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
+		wait.until(ExpectedConditions.titleContains("ヘルプ"));
 
 		// スクリーンショットをevidenceフォルダに保存
 		getEvidence(new Object() {
@@ -121,44 +121,37 @@ public class Case04 {
 		// 画面操作の待機用
 		WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(10));
 
-		// 現在のタブ（元タブ）を保持
+		// 現在のタブを保持
 		String base = webDriver.getWindowHandle();
 
-		// タブ数（クリック前）を保持
+		// クリック前のタブ数を保持
 		int before = webDriver.getWindowHandles().size();
 
 		// 「よくある質問」が見えるまで待機
-		visibilityTimeout(
-				By.xpath("//a[contains(normalize-space(.),'よくある質問') or .//*[contains(normalize-space(.),'よくある質問')]]"),
-				10);
+		visibilityTimeout(By.linkText("よくある質問"), 10);
 
-		// 「よくある質問」をクリック（別タブで開く）
-		webDriver.findElement(
-				By.xpath("//a[contains(normalize-space(.),'よくある質問') or .//*[contains(normalize-space(.),'よくある質問')]]"))
-				.click();
+		// 「よくある質問」をクリック
+		webDriver.findElement(By.linkText("よくある質問")).click();
 
 		// 別タブが開くまで待機
 		wait.until(ExpectedConditions.numberOfWindowsToBe(before + 1));
 
 		// 新しく開いたタブへ切り替え
-		for (String h : webDriver.getWindowHandles()) {
-			if (!h.equals(base)) {
-				webDriver.switchTo().window(h);
-				break;
-			}
-		}
+		String child = webDriver.getWindowHandles().stream()
+				.filter(h -> !h.equals(base)).findFirst().get();
+		webDriver.switchTo().window(child);
 
-		// 別タブが開けたことを確認（タブの数）
-		assertEquals(before + 1, webDriver.getWindowHandles().size());
+		// よくある質問画面へ遷移したことをタイトルで確認
+		wait.until(ExpectedConditions.titleContains("よくある質問"));
+
+		// スクリーンショットをevidenceフォルダに保存
+		getEvidence(new Object() {
+		}, "faq");
 
 		// 新規タブを閉じる
 		webDriver.close();
 
 		// 元タブへ戻る
 		webDriver.switchTo().window(base);
-
-		// スクリーンショットをevidenceフォルダに保存
-		getEvidence(new Object() {
-		}, "faq");
 	}
 }
